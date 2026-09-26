@@ -1,0 +1,8 @@
+{
+  "name": "brazier-docs",
+  "version": "1.0.0",
+  "dependencies": [
+    "brazier",
+    "openssl"
+  ]
+}

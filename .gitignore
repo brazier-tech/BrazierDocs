@@ -1,0 +1,14 @@
+.env
+/.vs/
+/out/
+/x64/
+/Build/
+/vcpkg_installed
+/build
+/.vscode
+/cmake-build-debug
+.clangd
+config.json
+certs/
+stress_logs/
+*.pem
