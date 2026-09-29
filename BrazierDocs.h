@@ -1,8 +1,6 @@
-﻿// BrazierDocs.h : включаемый файл для стандартных системных включаемых файлов
-// или включаемые файлы для конкретного проекта.
-
-#pragma once
+﻿#pragma once
 
 #include <iostream>
-
-// TODO: установите здесь ссылки на дополнительные заголовки, требующиеся для программы.
+#include<brazier/Core>
+#include<brazier/DB>
+#include "include/Database/Migrations/migration_nodes_create.hpp"
