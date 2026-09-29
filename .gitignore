@@ -12,3 +12,4 @@ config.json
 certs/
 stress_logs/
 *.pem
+/Storage/
