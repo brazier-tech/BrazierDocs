@@ -5,6 +5,8 @@ using namespace std;
 int main()
 {
 	try {
+        registerRoutes();
+
         brazier::ConfigManager::initGlobal();
 
         brazier::Server server(

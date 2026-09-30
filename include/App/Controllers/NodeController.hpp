@@ -2,6 +2,7 @@
 
 #include <brazier/Core>
 #include <brazier/DB>
+#include <brazier/Http>
 #include <nlohmann/json.hpp>
 #include "../../Database/Models/Node.hpp"
 
@@ -10,7 +11,7 @@ namespace http = beast::http;
 
 using json = nlohmann::json;
 
-class NodeController : public Controller {
+class NodeController : public brazier::Controller {
 public:
     using Request = http::request<http::string_body>;
     using Response = http::response<http::string_body>;

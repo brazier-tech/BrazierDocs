@@ -1,5 +1,5 @@
 #include <brazier/Core>
-#include "../App/Http/Controllers/ProfileController.hpp"
+#include "App/Controllers/NodeController.hpp"
 
 
 using Request = http::request<http::string_body>;
@@ -9,8 +9,8 @@ using Params = std::unordered_map<std::string, std::string>;
 using namespace brazier;
 
 void registerRoutes() {
-    auto profileController = std::make_shared<ProfileController>();
+    auto nodeController = std::make_shared<NodeController>();
 
-    R(POST, "/register", userController, register_);
+    R(GET, "/nodes/titles", nodeController, getAllTitles);
 
 }
