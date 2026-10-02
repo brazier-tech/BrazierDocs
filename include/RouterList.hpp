@@ -12,5 +12,10 @@ void registerRoutes() {
     auto nodeController = std::make_shared<NodeController>();
 
     R(GET, "/nodes/titles", nodeController, getAllTitles);
-
+    R(POST, "/node/create", nodeController, create);
+    R(GET, "/node/show", nodeController, show);
+    R(GET, "/node/show/:id", nodeController, show);
+    R(PUT, "/node/update", nodeController, update);
+    R(DELETE_, "/node/delete", nodeController, delete_);
+    R(DELETE_, "/node/delete/:id", nodeController, delete_);
 }

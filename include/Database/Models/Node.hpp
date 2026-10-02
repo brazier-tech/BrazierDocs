@@ -19,41 +19,10 @@ public:
     };
     static inline std::string primary_key = "id";
 
-    std::map<std::string, std::string> attributes;
+    nlohmann::json toTitlesJson() const;
 
-    nlohmann::json toTitlesJson() const {
-        auto get = [this](const std::string& key) -> std::string {
-            auto it = attributes.find(key);
-            return it != attributes.end() ? it->second : std::string{};
-            };
-
-        std::string pid = get("parent_id");
-
-        return {
-            {"id",         get("id")},
-            {"parent_id",  pid.empty() ? nlohmann::json(nullptr) : nlohmann::json(pid)},
-            {"title",      get("title")},
-            {"slug",       get("slug")},
-            {"sort_order", get("sort_order")}
-        };
-    }
-
-    static nlohmann::json getAllTitlesJson() {
-        auto nodes = Node::query()
-            .Select({ "id", "parent_id", "title", "slug", "sort_order" })
-            .get();
-
-        std::string out;
-        out.reserve(nodes.size() * 256);
-        out += '[';
-        bool first = true;
-        for (const auto& n : nodes) {
-            if (!first) out += ',';
-            first = false;
-            out += n->toTitlesJson().dump();
-        }
-        out += ']';
-        return out;
-    }
-
+    static std::string getAllTitlesJson();
+    
+    static bool deleteTree(const std::string& rootId);
+    void delete_();
 };

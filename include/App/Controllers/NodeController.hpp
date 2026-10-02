@@ -18,8 +18,11 @@ public:
 
     boost::asio::awaitable<void> create(const Request& req, Response& res, const Params& params);
     boost::asio::awaitable<void> getAllTitles(const Request& req, Response& res, const Params& params);
-    boost::asio::awaitable<void> index(const Request& req, Response& res, const Params& params);
+    boost::asio::awaitable<void> show(const Request& req, Response& res, const Params& params);
     boost::asio::awaitable<void> update(const Request& req, Response& res, const Params& params);
     boost::asio::awaitable<void> delete_(const Request& req, Response& res, const Params& params);
+
+    bool is_valid_slug(const std::string& s);
+    bool validateUpdate(const json& body, const std::string& id, Response& res);
 
 };
