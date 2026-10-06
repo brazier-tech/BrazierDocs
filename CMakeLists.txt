@@ -13,7 +13,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 if(MSVC)
     add_compile_options(/utf-8)
 endif()
-find_package(brazier CONFIG REQUIRED)                   
+find_package(brazier CONFIG REQUIRED COMPONENTS core orm)                 
 
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
