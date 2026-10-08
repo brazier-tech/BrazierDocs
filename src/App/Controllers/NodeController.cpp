@@ -23,7 +23,7 @@ boost::asio::awaitable<void> NodeController::create(const Request& req, Response
         if (!content.empty())   data["content"] = content;
         if (!parent_id.empty()) data["parent_id"] = parent_id;
 
-        if (!Node::create(data)->save()) throw std::runtime_error("Node creating error");
+        if (!Node::create(data, false)->save()) throw std::runtime_error("Node creating error");
 
         res.result(http::status::created);
         res.body() = json({ {"status", "created"} }).dump();

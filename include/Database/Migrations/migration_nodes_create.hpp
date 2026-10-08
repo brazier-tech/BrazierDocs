@@ -1,6 +1,6 @@
 #pragma once
 
-#include <brazier/DB>
+#include <brazier/orm/DB>
 
 using namespace brazier;
 
@@ -30,8 +30,8 @@ public:
         return queries;
     }
 
-    static std::string down() {
+    static std::vector<std::string> down() {
         SQLSchemaBuilder builder("nodes");
-        return builder.DropTable();
+        return { builder.DropTable() };
     }
 };

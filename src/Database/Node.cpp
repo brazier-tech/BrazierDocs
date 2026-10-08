@@ -36,24 +36,17 @@ std::string Node::getAllTitlesJson() {
 }
 
 bool Node::deleteTree(const std::string& rootId) {
-    brazier::Database db;
-    PGconn* conn = db.getConnection();
+    auto db = brazier::orm::active_db();
+    PGconn* conn = db->getConnection();
     if (!conn) {
         brazier::Logger::log("deleteTree: no db connection", "ERROR");
         return false;
     }
 
-    std::string sql =
-        "WITH RECURSIVE tree AS ("
-        "  SELECT id FROM nodes WHERE id = '" + rootId + "'"
-        "  UNION ALL"
-        "  SELECT n.id FROM nodes n"
-        "  INNER JOIN tree t ON n.parent_id = t.id"
-        ")"
-        "DELETE FROM nodes WHERE id IN (SELECT id FROM tree);";
+    std::string sql = "...";
 
     try {
-        db.execute(sql);
+        db->execute(sql);
         return true;
     }
     catch (const std::exception& e) {
