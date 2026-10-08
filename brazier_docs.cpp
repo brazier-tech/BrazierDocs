@@ -11,7 +11,7 @@ int main()
             brazier::global_config->get("server.host", "0.0.0.0"),
             brazier::global_config->get("server.port", 3501));
 
-        auto db = std::make_shared<brazier::Database>(
+        brazier::Database db(
             brazier::global_config->get("database.host", "localhost"),
             brazier::global_config->get("database.port", "5432"),
             brazier::global_config->get("database.username", "postgres"),
@@ -22,8 +22,7 @@ int main()
 
         std::unique_ptr<MigrationManager> manager = nullptr;
 
-        MigrationManager::init(*db);
-        manager = std::make_unique<MigrationManager>(*db);
+        manager = std::make_unique<MigrationManager>(db);
         
         manager->migrateAll<
             MigrationNodesCreate>();

@@ -8,7 +8,7 @@ class Node : public brazier::Model<Node> {
 public:
 
     Node() = default;
-    Node(const std::shared_ptr<brazier::Database>& db) : Model<Node>(db) {}
+    Node(brazier::Database& db) : Model<Node>(db) {}
 
     static inline std::string table_name = "nodes";
     static inline std::vector<std::string> fillable = {

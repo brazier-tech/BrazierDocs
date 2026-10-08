@@ -36,8 +36,8 @@ std::string Node::getAllTitlesJson() {
 }
 
 bool Node::deleteTree(const std::string& rootId) {
-    auto db = brazier::orm::active_db();
-    PGconn* conn = db->getConnection();
+    brazier::Database& db = brazier::orm::active_db();              
+    PGconn* conn = db.getConnection();
     if (!conn) {
         brazier::Logger::log("deleteTree: no db connection", "ERROR");
         return false;
@@ -46,7 +46,7 @@ bool Node::deleteTree(const std::string& rootId) {
     std::string sql = "...";
 
     try {
-        db->execute(sql);
+        db.execute(sql);
         return true;
     }
     catch (const std::exception& e) {
