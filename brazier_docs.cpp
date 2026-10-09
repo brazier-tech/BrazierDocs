@@ -18,8 +18,6 @@ int main()
             brazier::global_config->get("database.password", ""),
             brazier::global_config->get("database.database", "postgres"));
 
-        brazier::orm::set_active_db(db);
-
         std::unique_ptr<MigrationManager> manager = nullptr;
 
         manager = std::make_unique<MigrationManager>(db);

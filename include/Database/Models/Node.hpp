@@ -8,7 +8,7 @@ class Node : public brazier::Model<Node> {
 public:
 
     Node() = default;
-    Node(brazier::Database& db) : Model<Node>(db) {}
+    Node(std::shared_ptr<brazier::Database> db) : Model<Node>(db) {}
 
     static inline std::string table_name = "nodes";
     static inline std::vector<std::string> fillable = {
@@ -21,8 +21,8 @@ public:
 
     nlohmann::json toTitlesJson() const;
 
-    static std::string getAllTitlesJson();
+    static std::string getAllTitlesJson(std::shared_ptr<brazier::Database> db);
     
-    static bool deleteTree(const std::string& rootId);
+    static bool deleteTree(const std::string& rootId, std::shared_ptr<brazier::Database> db);
     void delete_();
 };

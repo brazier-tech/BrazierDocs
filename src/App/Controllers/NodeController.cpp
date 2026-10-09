@@ -1,5 +1,19 @@
 #include "App/Controllers/NodeController.hpp"
 
+NodeController::NodeController() {
+    try {
+        db_ptr = std::make_shared<brazier::Database>(
+            brazier::global_config->get("database.host", "localhost"),
+            brazier::global_config->get("database.port", "5432"),
+            brazier::global_config->get("database.username", "postgres"),
+            brazier::global_config->get("database.password", ""),
+            brazier::global_config->get("database.database", "postgres"));
+    }
+    catch (std::exception& e) {
+        brazier::Logger::log(e.what(), "ERROR");
+    }
+}
+
 boost::asio::awaitable<void> NodeController::create(const Request& req, Response& res, const Params&) {
     try {
         json body = json::parse(req.body());
@@ -23,7 +37,7 @@ boost::asio::awaitable<void> NodeController::create(const Request& req, Response
         if (!content.empty())   data["content"] = content;
         if (!parent_id.empty()) data["parent_id"] = parent_id;
 
-        if (!Node::create(data, false)->save()) throw std::runtime_error("Node creating error");
+        if (!Node::create(data, false, db_ptr)->save()) throw std::runtime_error("Node creating error");
 
         res.result(http::status::created);
         res.body() = json({ {"status", "created"} }).dump();
@@ -44,7 +58,7 @@ boost::asio::awaitable<void> NodeController::create(const Request& req, Response
 
 boost::asio::awaitable<void> NodeController::getAllTitles(const Request& req, Response& res, const Params&) {
     try {
-        res.body() = Node::getAllTitlesJson();
+        res.body() = Node::getAllTitlesJson(db_ptr);
         res.result(http::status::ok);
         co_return;
     }
@@ -72,7 +86,7 @@ boost::asio::awaitable<void> NodeController::show(const Request& req, Response& 
             co_return;
         }
 
-        auto node = Node::where("id = '" + id + "'").first();
+        auto node = Node::where("id = '" + id + "'", db_ptr).first();
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
@@ -107,7 +121,7 @@ boost::asio::awaitable<void> NodeController::update(const Request& req, Response
             co_return;
         }
 
-        auto node = Node::where("id = '" + id + "'").first();
+        auto node = Node::where("id = '" + id + "'", db_ptr).first();
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
@@ -190,14 +204,14 @@ boost::asio::awaitable<void> NodeController::delete_(const Request& req, Respons
             co_return;
         }
 
-        auto node = Node::where("id = '" + id + "'").first();
+        auto node = Node::where("id = '" + id + "'", db_ptr).first();
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
             co_return;
         }
 
-        if (!Node::deleteTree(id)) {
+        if (!Node::deleteTree(id, db_ptr)) {
             res.result(http::status::internal_server_error);
             res.body() = json({ {"error", "failed to delete tree"} }).dump();
             co_return;
@@ -237,7 +251,7 @@ bool NodeController::validateUpdate(const json& body,
             return false;
         }
         std::string newSlug = body["slug"];
-        auto clash = Node::where("slug = '" + newSlug + "' AND id <> '" + id + "'").first();
+        auto clash = Node::where("slug = '" + newSlug + "' AND id <> '" + id + "'", db_ptr).first();
         if (clash) {
             res.result(http::status::conflict);
             res.body() = json({ {"error", "slug already exists"} }).dump();
@@ -269,7 +283,7 @@ bool NodeController::validateUpdate(const json& body,
                 res.body() = json({ {"error", "node cannot be its own parent"} }).dump();
                 return false;
             }
-            auto parent = Node::where("id = '" + pid + "'").first();
+            auto parent = Node::where("id = '" + pid + "'", db_ptr).first();
             if (!parent) {
                 res.result(http::status::not_found);
                 res.body() = json({ {"error", "parent not found"} }).dump();

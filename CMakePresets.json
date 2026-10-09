@@ -11,8 +11,7 @@
         "CMAKE_C_COMPILER": "cl.exe",
         "CMAKE_CXX_COMPILER": "cl.exe",
         "VCPKG_TARGET_TRIPLET": "x64-windows",
-        "CMAKE_TOOLCHAIN_FILE": "C:/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake",
-        "VCPKG_BINARY_SOURCES": "clear"
+        "CMAKE_TOOLCHAIN_FILE": "C:/Tools/vcpkg/scripts/buildsystems/vcpkg.cmake"
       },
       "condition": {
         "type": "equals",

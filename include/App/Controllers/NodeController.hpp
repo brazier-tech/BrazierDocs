@@ -15,6 +15,10 @@ class NodeController : public brazier::Controller {
 public:
     using Request = http::request<http::string_body>;
     using Response = http::response<http::string_body>;
+    
+    NodeController();
+
+    static inline std::shared_ptr<brazier::Database> db_ptr = nullptr;
 
     boost::asio::awaitable<void> create(const Request& req, Response& res, const Params& params);
     boost::asio::awaitable<void> getAllTitles(const Request& req, Response& res, const Params& params);

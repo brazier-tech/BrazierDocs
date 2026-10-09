@@ -17,10 +17,10 @@ nlohmann::json Node::toTitlesJson() const {
     };
 }
 
-std::string Node::getAllTitlesJson() {
+std::string Node::getAllTitlesJson(std::shared_ptr<brazier::Database> db) {
     auto nodes = Node::query()
         .Select({ "id", "parent_id", "title", "slug", "sort_order" })
-        .get();
+        .get(db);
 
     std::string out;
     out.reserve(nodes.size() * 256);
@@ -35,9 +35,8 @@ std::string Node::getAllTitlesJson() {
     return out;
 }
 
-bool Node::deleteTree(const std::string& rootId) {
-    brazier::Database& db = brazier::orm::active_db();              
-    PGconn* conn = db.getConnection();
+bool Node::deleteTree(const std::string& rootId, std::shared_ptr<brazier::Database> db) {
+    PGconn* conn = db->getConnection();
     if (!conn) {
         brazier::Logger::log("deleteTree: no db connection", "ERROR");
         return false;
@@ -46,7 +45,7 @@ bool Node::deleteTree(const std::string& rootId) {
     std::string sql = "...";
 
     try {
-        db.execute(sql);
+        db->execute(sql);
         return true;
     }
     catch (const std::exception& e) {
@@ -62,7 +61,7 @@ void Node::delete_() {
             brazier::Logger::log("delete_: ID attribute is missing", "ERROR");
             return;
         }
-        deleteTree(id);
+        deleteTree(id, database);
     }
     catch (const std::exception& e) {
         brazier::Logger::log("delete_ error: " + std::string(e.what()), "ERROR");
