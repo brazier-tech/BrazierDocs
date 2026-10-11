@@ -13,3 +13,5 @@ certs/
 stress_logs/
 *.pem
 /Storage/
+
+vcpkg-configuration.json

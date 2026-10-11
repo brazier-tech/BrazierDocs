@@ -20,9 +20,15 @@ file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/include/*.hpp"
 )
 
-add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp ${APP_SOURCES})
+add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp ${APP_SOURCES})        
+
+add_executable("init_orm" utils/init_orm.cpp)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE 
+    brazier::brazier
+)
+
+target_link_libraries("init_orm" PRIVATE 
     brazier::brazier
 )
 
