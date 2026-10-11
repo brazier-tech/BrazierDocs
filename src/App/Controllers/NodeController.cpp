@@ -71,6 +71,11 @@ boost::asio::awaitable<void> NodeController::getAllTitles(const Request& req, Re
 
 boost::asio::awaitable<void> NodeController::show(const Request& req, Response& res, const Params& params) {
     try {
+        PGconn* conn = db_ptr->getConnection();
+        if (!conn) {
+            throw std::runtime_error("Database connecttion error");
+        }
+
         std::string id;
         if (params.empty()) {
             json body = json::parse(req.body());
@@ -86,7 +91,7 @@ boost::asio::awaitable<void> NodeController::show(const Request& req, Response& 
             co_return;
         }
 
-        auto node = Node::where("id = '" + id + "'", db_ptr).first();
+        auto node = Node::where("id = " + brazier::SQLString::EscapeString(conn, id), db_ptr).first();
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
@@ -106,6 +111,11 @@ boost::asio::awaitable<void> NodeController::show(const Request& req, Response& 
 
 boost::asio::awaitable<void> NodeController::update(const Request& req, Response& res, const Params& params) {
     try {
+        PGconn* conn = db_ptr->getConnection();
+        if (!conn) {
+            throw std::runtime_error("Database connecttion error");
+        }
+
         std::string id;
         if (params.empty()) {
             json body = json::parse(req.body());
@@ -121,7 +131,7 @@ boost::asio::awaitable<void> NodeController::update(const Request& req, Response
             co_return;
         }
 
-        auto node = Node::where("id = '" + id + "'", db_ptr).first();
+        auto node = Node::where("id = " + brazier::SQLString::EscapeString(conn, id), db_ptr).first();
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
@@ -189,6 +199,11 @@ boost::asio::awaitable<void> NodeController::update(const Request& req, Response
 
 boost::asio::awaitable<void> NodeController::delete_(const Request& req, Response& res, const Params& params) {
     try {
+        PGconn* conn = db_ptr->getConnection();
+        if (!conn) {
+            throw std::runtime_error("Database connecttion error");
+        }
+
         std::string id;
         if (params.empty()) {
             json body = json::parse(req.body());
@@ -204,7 +219,7 @@ boost::asio::awaitable<void> NodeController::delete_(const Request& req, Respons
             co_return;
         }
 
-        auto node = Node::where("id = '" + id + "'", db_ptr).first();
+        auto node = Node::where("id = " + brazier::SQLString::EscapeString(conn, id), db_ptr).first();
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
