@@ -42,7 +42,14 @@ bool Node::deleteTree(const std::string& rootId, std::shared_ptr<brazier::Databa
         return false;
     }
 
-    std::string sql = "...";
+    std::string sql =
+        "WITH RECURSIVE tree AS ("
+        "  SELECT id FROM nodes WHERE id = " + brazier::SQLString::EscapeString(conn, rootId) +
+        "  UNION ALL"
+        "  SELECT n.id FROM nodes n"
+        "  INNER JOIN tree t ON n.parent_id = t.id"
+        ")"
+        "DELETE FROM nodes WHERE id IN (SELECT id FROM tree);";
 
     try {
         db->execute(sql);
