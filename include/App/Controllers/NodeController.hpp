@@ -1,7 +1,7 @@
 #pragma once
 
 #include <brazier/Core>
-#include <brazier/orm/DB>
+#include <brazier/orm.hpp>
 #include <brazier/Http>
 #include <nlohmann/json.hpp>
 #include "../../Database/Models/Node.hpp"

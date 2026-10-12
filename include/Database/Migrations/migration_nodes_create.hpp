@@ -1,6 +1,6 @@
 #pragma once
 
-#include <brazier/orm/DB>
+#include <brazier/orm.hpp>
 
 using namespace brazier;
 
@@ -19,13 +19,13 @@ public:
             .AddColumn("sort_order REAL NOT NULL DEFAULT 0")
             .AddColumn("created_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP")
             .AddColumn("updated_at TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP")
+            .AddIndex("idx_nodes_parent_id", { "parent_id" })
+            .AddIndex("idx_nodes_sort", { "parent_id", "sort_order" })
+            .AddUniqueConstraint("uq_nodes_slug", { "slug" })
             .CreateTable());
 
         queries.push_back("ALTER TABLE nodes ADD CONSTRAINT fk_nodes_parent "
             "FOREIGN KEY (parent_id) REFERENCES nodes(id) ON DELETE CASCADE;");
-        queries.push_back(builder.AddUniqueConstraint("uq_nodes_slug", { "slug" }));
-        queries.push_back(builder.AddIndex("idx_nodes_parent_id", { "parent_id" }));
-        queries.push_back(builder.AddIndex("idx_nodes_sort", { "parent_id", "sort_order" }));
 
         return queries;
     }

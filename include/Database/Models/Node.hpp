@@ -1,6 +1,6 @@
 #pragma once
 
-#include <brazier/orm/DB>
+#include <brazier/orm.hpp>
 #include <string>
 #include <map>
 
