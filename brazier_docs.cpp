@@ -8,15 +8,15 @@ int main()
         ConfigManager::initGlobal();
 
         Server server(
-            global_config->get("server.host", "0.0.0.0"),
-            global_config->get("server.port", 3501));
+            ConfigManager::getGlobal().get("server.host", "0.0.0.0"),
+            ConfigManager::getGlobal().get("server.port", 3501));
 
         Database db(
-            global_config->get("database.host", "localhost"),
-            global_config->get("database.port", "5432"),
-            global_config->get("database.username", "postgres"),
-            global_config->get("database.password", ""),
-            global_config->get("database.database", "postgres"));
+            ConfigManager::getGlobal().get("database.host", "localhost"),
+            ConfigManager::getGlobal().get("database.port", "5432"),
+            ConfigManager::getGlobal().get("database.username", "postgres"),
+            ConfigManager::getGlobal().get("database.password", ""),
+            ConfigManager::getGlobal().get("database.database", "postgres"));
 
         std::unique_ptr<MigrationManager> manager = nullptr;
 

@@ -9,11 +9,11 @@ int main()
         ConfigManager::initGlobal();
 
         Database db(
-            global_config->get("database.host", "localhost"),
-            global_config->get("database.port", "5432"),
-            global_config->get("database.username", "postgres"),
-            global_config->get("database.password", ""),
-            global_config->get("database.database", "postgres"));
+            ConfigManager::getGlobal().get("database.host", "localhost"),
+            ConfigManager::getGlobal().get("database.port", "5432"),
+            ConfigManager::getGlobal().get("database.username", "postgres"),
+            ConfigManager::getGlobal().get("database.password", ""),
+            ConfigManager::getGlobal().get("database.database", "postgres"));
 
 		try {
 			MigrationManager::init(db);

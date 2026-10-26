@@ -3,11 +3,11 @@
 NodeController::NodeController() {
     try {
         db_ptr = std::make_shared<brazier::Database>(
-            brazier::global_config->get("database.host", "localhost"),
-            brazier::global_config->get("database.port", "5432"),
-            brazier::global_config->get("database.username", "postgres"),
-            brazier::global_config->get("database.password", ""),
-            brazier::global_config->get("database.database", "postgres"));
+            brazier::ConfigManager::getGlobal().get("database.host", "localhost"),
+            brazier::ConfigManager::getGlobal().get("database.port", "5432"),
+            brazier::ConfigManager::getGlobal().get("database.username", "postgres"),
+            brazier::ConfigManager::getGlobal().get("database.password", ""),
+            brazier::ConfigManager::getGlobal().get("database.database", "postgres"));
     }
     catch (std::exception& e) {
         brazier::Logger::log(e.what(), "ERROR");
@@ -91,7 +91,7 @@ boost::asio::awaitable<void> NodeController::show(const Request& req, Response& 
             co_return;
         }
 
-        auto node = Node::where("id = " + brazier::SQLString::EscapeString(conn, id), db_ptr).first();
+        auto node = Node::findOrFail(id, db_ptr);
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
@@ -131,7 +131,7 @@ boost::asio::awaitable<void> NodeController::update(const Request& req, Response
             co_return;
         }
 
-        auto node = Node::where("id = " + brazier::SQLString::EscapeString(conn, id), db_ptr).first();
+        auto node = Node::findOrFail(id, db_ptr);
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
@@ -219,7 +219,7 @@ boost::asio::awaitable<void> NodeController::delete_(const Request& req, Respons
             co_return;
         }
 
-        auto node = Node::where("id = " + brazier::SQLString::EscapeString(conn, id), db_ptr).first();
+        auto node = Node::findOrFail(id, db_ptr);
         if (!node) {
             res.result(http::status::not_found);
             res.body() = json({ {"error", "not found"} }).dump();
@@ -298,7 +298,7 @@ bool NodeController::validateUpdate(const json& body,
                 res.body() = json({ {"error", "node cannot be its own parent"} }).dump();
                 return false;
             }
-            auto parent = Node::where("id = '" + pid + "'", db_ptr).first();
+            auto parent = Node::findOrFail(pid, db_ptr);
             if (!parent) {
                 res.result(http::status::not_found);
                 res.body() = json({ {"error", "parent not found"} }).dump();
