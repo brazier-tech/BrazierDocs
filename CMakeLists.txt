@@ -13,23 +13,30 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 if(MSVC)
     add_compile_options(/utf-8)
 endif()
-find_package(brazier CONFIG REQUIRED COMPONENTS core orm logger)                 
+
+find_package(brazier-core   CONFIG REQUIRED)
+find_package(brazier-orm    CONFIG REQUIRED)
+find_package(brazier-logger CONFIG REQUIRED)
 
 file(GLOB_RECURSE APP_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_SOURCE_DIR}/src/*.cpp"
     "${CMAKE_SOURCE_DIR}/include/*.hpp"
 )
 
-add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp ${APP_SOURCES})        
+add_executable(${PROJECT_NAME} ${PROJECT_NAME}.cpp ${APP_SOURCES})
 
 add_executable("init_orm" utils/init_orm.cpp)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE 
-    brazier::brazier
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    brazier::core
+    brazier::orm
+    brazier::logger
 )
 
-target_link_libraries("init_orm" PRIVATE 
-    brazier::brazier
+target_link_libraries("init_orm" PRIVATE
+    brazier::core
+    brazier::orm
+    brazier::logger
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE

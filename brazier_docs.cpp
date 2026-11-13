@@ -23,7 +23,9 @@ int main()
         manager = std::make_unique<MigrationManager>(db);
         
         manager->migrateAll<
-            MigrationNodesCreate>();
+            MigrationNodesCreate,
+            MigrationUsersCreate
+        >();
 
         registerRoutes();
 

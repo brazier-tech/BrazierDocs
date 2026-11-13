@@ -2,6 +2,8 @@
   "name": "brazier-docs",
   "version": "1.0.0",
   "dependencies": [
-    "brazier"
+    "brazier-logger",
+    "brazier-core",
+    "brazier-orm"
   ]
 }
