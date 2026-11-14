@@ -19,8 +19,4 @@ public:
     };
     static inline std::string primary_key = "id";
 
-    std::string generate_salt(size_t bytes = 16);
-    std::string hash(const std::string& password, const std::string& salt);
-    bool verify(const std::string& password, const std::string& salt, const std::string& stored_hash);
-
 };

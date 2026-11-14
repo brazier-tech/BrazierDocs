@@ -14,7 +14,7 @@ UserController::UserController() {
     }
 }
 
-boost::asio::awaitable<void> UserController::create(const Request& req, Response& res, const Params&) {
+boost::asio::awaitable<void> UserController::register_(const Request& req, Response& res, const Params&) {
     try {
         json body = json::parse(req.body());
 
@@ -70,6 +70,46 @@ boost::asio::awaitable<void> UserController::create(const Request& req, Response
     }
     catch (const std::exception& e) {
         brazier::Logger::log("UserController::create error: " + std::string(e.what()), "ERROR");
+        res.result(http::status::internal_server_error);
+        res.body() = json({ {"error", e.what()} }).dump();
+        co_return;
+    }
+}
+
+boost::asio::awaitable<void> UserController::delete_(const Request& req, Response& res, const Params& params) {
+    try {
+        PGconn* conn = db_ptr->getConnection();
+        if (!conn) {
+            throw std::runtime_error("Database connecttion error");
+        }
+
+        std::string id;
+        if (params.empty()) {
+            json body = json::parse(req.body());
+            id = body.value("id", std::string{});
+        }
+        else {
+            id = params.at("id");
+        }
+
+        if (id.empty()) {
+            res.result(http::status::bad_request);
+            res.body() = json({ {"error", "id is required"} }).dump();
+            co_return;
+        }
+
+        User::deleteById(id, db_ptr);
+
+        res.result(http::status::no_content);
+        co_return;
+    }
+    catch (const json::parse_error& e) {
+        res.result(http::status::bad_request);
+        res.body() = json({ {"error", "invalid json"} }).dump();
+        co_return;
+    }
+    catch (const std::exception& e) {
+        brazier::Logger::log("UserController::delete_ error: " + std::string(e.what()), "ERROR");
         res.result(http::status::internal_server_error);
         res.body() = json({ {"error", e.what()} }).dump();
         co_return;

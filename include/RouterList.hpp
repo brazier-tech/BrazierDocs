@@ -20,5 +20,7 @@ void registerRoutes() {
     R(DELETE_, "/node/delete", nodeController, delete_);
     R(DELETE_, "/node/delete/:id", nodeController, delete_);
 
-    R(POST, "/user/create", userController, create);
+    R(POST, "/user/register", userController, register_);
+    R(DELETE_, "/user/delete", userController, delete_);
+    R(DELETE_, "/user/delete/:id", userController, delete_);
 }

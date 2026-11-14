@@ -21,6 +21,6 @@ public:
 
     static inline std::shared_ptr<brazier::Database> db_ptr = nullptr;
 
-    boost::asio::awaitable<void> create(const Request& req, Response& res, const Params& params);
-
+    boost::asio::awaitable<void> register_(const Request& req, Response& res, const Params& params);
+    boost::asio::awaitable<void> delete_(const Request& req, Response& res, const Params& params);
 };
